@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--1。读取关于数据库连接信息的属性配置文件-->
+    <properties resource="jdbc.properties"></properties>
+    <!--2.设置日志输出底层执行的代码-->
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+    <!--3.注册实体类的别名-->
+    <typeAliases>
+        <package name="org.example.domain"/>
+    </typeAliases>
+    <!--4.配置数据库的环境变量（数据库连接配置）-->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driverClassName}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--5.注册mapper.xml文件-->
+    <mappers>
+        <!--单个mapper文件注册           class:接口全限定名
+        <mapper class="org.example.mapper.UsersMapper"></mapper>-->
+
+        <!--批量mapper文件注册
+            name:文件、接口所在全限定包名   即mapper包-->
+        <package name="org.example.mapper"/>
+    </mappers>
+    
+</configuration>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="01JDBC" />
         <module name="03MyBatis" />
+        <module name="04ProxyMyBatis" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

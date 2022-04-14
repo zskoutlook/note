@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace：接口的全限定名一致-->
+<mapper namespace="org.example.mapper.UsersMapper">
+
+    <!--    List<Users> getAll();   -->
+    <select id="getAll"  resultType="users">
+        select id,userName,birthday,sex,address
+        from users
+    </select>
+
+    <!-- Users getById(int id); -->
+    <select id="getById" parameterType="int" resultType="users">
+        select id,userName,birthday,sex,address
+        from users
+        where id=#{id}
+    </select>
+
+    <!--List<Users> getByName(String userName);-->
+    <select id="getByName" parameterType="string" resultType="users">
+        select id,userName,birthday,sex,address
+        from users
+        where username like '%${username}%'
+    </select>
+
+    <!--void insert(Users users);-->
+    <insert id="insert" parameterType="users">
+        insert into users (username,birthday,sex,address) values(#{userName},#{birthday},#{sex},#{address})
+    </insert>
+
+    <!--int update(Users users);-->
+    <update id="update" parameterType="users">
+        update users set username=#{userName},birthday=#{birthday},sex=#{sex},address=#{address}
+        where id=#{id}
+    </update>
+
+    <!--int delete(int id);-->
+    <delete id="delete" parameterType="int">
+        delete from users where id=#{id}
+    </delete>
+</mapper>

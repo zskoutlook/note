@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--1。读取关于数据库连接信息的属性配置文件
+         resource:从resources目录下加载文件
+         url:使用服务器的绝对路径加载文件-->
+    <properties resource="jdbc.properties"></properties>
+
+    <!--2.设置日志输出底层执行的代码-->
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+    <!--3.注册实体类的别名-->
+    <typeAliases>
+        <!--单个注册
+        <typeAlias type="org.example.domain.Student1" alias="student1"></typeAlias>
+        -->
+        <!--批量注册:整个包下都自动生成别名，为类名的驼峰 aaaBbbCcc-->
+        <package name="org.example.domain"/>
+    </typeAliases>
+
+    
+    <!--4.配置数据库的环境变量（数据库连接配置）
+        default：默认使用哪套配置-->
+    <environments default="development">
+        <!--配置可以又多套
+            id：本套配置的标识，给父标签default属性使用的-->
+
+        <environment id="test">
+            <!--配置事务管理器
+                type：指定事务管理方式
+                    JDBC：交给程序员管理
+                    MANAGED：由容器（spring）管理事务-->
+            <transactionManager type=""></transactionManager>
+            <!--配置数据源
+                type：指定不同的配置方式
+                    JNDI：java命名目录接口，在服务端进行数据库连接池的管理
+                    POOLED：使用数据库连接池
+                    UNPOOLED：不使用数据库连接池-->
+            <dataSource type="">
+                <!--信息参数-->
+                <property name="" value=""/>
+            </dataSource>
+        </environment>
+
+        <environment id="development">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driverClassName}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+
+        <environment id="online">
+            <transactionManager type=""></transactionManager>
+            <dataSource type=""></dataSource>
+        </environment>
+    </environments>
+    
+    <!--5.注册mapper.xml文件-->
+    <mappers>
+        <!--resource:从resources目录下加载文件
+            url:使用服务器的绝对路径加载文件-->
+        <mapper resource="StudentMapper.xml"></mapper>
+    </mappers>
+    
+</configuration>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

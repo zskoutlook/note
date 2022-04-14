@@ -1,0 +1,18 @@
+在模块中使用数据库：使用demo库的users表
+
+
+包:界面层Controller
+      业务逻辑接口层service   业务逻辑实现类serviceImpl
+      数据访问接口层dao       数据访问实现类daoImpl(在mybatis中不是实现类，而是mapper.xml文件代替实现类----->无法在业务逻辑层访问xml文件---->动态代理解决)
+
+        动态代理实现业务逻辑层通过接口访问数据访问层：      动态代理对象就相当于之前的dao对象
+            1.mapper文件、接口必须在统一目录下
+            2.mapper文件名、接口名必须一致
+            3.mapper文件的id值 与 接口方法名完全一致
+            4.mapper文件的parameterType值 与 接口方法的参数一致
+            5.mapper文件的resultType值 与 接口方法的返回值一致
+            6.mapper文件的namespace值 与 接口的全限定名一致
+            7.mapper文件在主配置文件中注册时，使用class=接口的全限定名
+
+
+

@@ -5,14 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.example</groupId>
-  <artifactId>MyBatis</artifactId>
+  <artifactId>ProxyMyBatis</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
 
 
-  <name>MyBatis</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -41,12 +37,10 @@
     </dependency>
   </dependencies>
 
-
-  <!--添加资源文件的指定：把文件拷贝到指定目录-->
   <build>
     <resources>
       <resource>
-        <directory>src/main/java</directory>    <!--拷贝该目录下的使用文件-->
+        <directory>src/main/java</directory>    <!--拷贝该目录下的文件-->
         <includes>                              <!--拷贝什么类型文件-->
           <include>**/*.xml</include>
           <include>**/*.properties</include>
@@ -62,7 +56,4 @@
       </resource>
     </resources>
   </build>
-
-
-
 </project>
