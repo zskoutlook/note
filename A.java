@@ -1,3 +1,5 @@
 public class A {
-  阿萨的
+  public static void main(String[] args) {
+
+  }
 }
