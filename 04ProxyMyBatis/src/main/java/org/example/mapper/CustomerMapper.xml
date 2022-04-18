@@ -42,7 +42,7 @@
         <id property="id" column="id"></id>
         <result property="name" column="name"></result>
         <result property="age" column="age"></result>
-        <!--引用查多方的list集合   column把id值传入下一个sql语句   select：引用歇一天语句-->
+        <!--引用查多方的list集合   column把id值传入下一个sql语句   select：引用查询的sql语句-->
         <collection property="ordersList" ofType="orders" column="id" select="getByIdList" />
     </resultMap>
 
@@ -61,7 +61,7 @@
         <id property="id" column="id"></id>
         <result property="name" column="name"></result>
         <result property="age" column="age"></result>
-        <!--引用查多方的list集合   column把id值传入下一个sql语句   select：引用歇一天语句-->
+        <!--引用查多方的list集合   column把id值传入下一个sql语句   select：引用查询的sql语句-->
         <collection property="ordersList" ofType="orders" column="id" select="org.example.mapper.OrdersMapper.getByIdList" />
     </resultMap>
 
