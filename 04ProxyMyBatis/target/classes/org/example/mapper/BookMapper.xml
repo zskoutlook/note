@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace：接口的全限定名一致-->
+<mapper namespace="org.example.mapper.BookMapper">
+    <!--domain中实体类的成员变量和数据库的列名不一致问题：
+        方式一：列名使用别名与成员变量一致
+    -->
+    <select id="getAllOne" resultType="book">
+        select bookid as id,bookname as name
+        from book;
+    </select>
+
+    <!--domain中实体类的成员变量和数据库的列名不一致问题：
+       方式二：手动映射
+            resultMap标签：  type：类型          id：标识————>被sql语句标签的resultMap引用
+                id标签：主键绑定   property:成员变量  column列名
+                result标签：非主键绑定 property:成员变量  column列名
+   -->
+    <resultMap id="bookmap" type="book">
+        <!--主键绑定-->
+        <id property="id" column="bookid"></id>
+        <!--非主键绑定-->
+        <result property="name" column="bookname"></result>
+    </resultMap>
+    <select id="getAllTwo" resultMap="bookmap">
+        select bookid,bookname
+        from book;
+    </select>
+
+
+</mapper>

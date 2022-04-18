@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.mapper.CustomerMapper">
+    <!--返回Id的Customer对象  1对多，查1的信息           一方持有多方的集合List-->
+    <select id="getById" parameterType="int" resultMap="customermap">
+        select c.id cid,name,age,o.id oid,orderNumber,orderPrice,customer_id
+        from customer c left join orders o on c.id=customer_id
+        where c.id=#{id}
+
+    </select>
+    <!--返回对象的成员变量是一个集合类型的数据是，可以使用collection标签继续往下绑定-->
+    <resultMap id="customermap" type="customer">
+        <id property="id" column="cid"></id>
+        <result property="name" column="name"></result>
+        <result property="age" column="age"></result>
+        <!--成员变量是一个集合类型的数据，可以用该方式继续绑定  property：该集合类型的成员变量    ofType该成员变量对应的泛型类型-->
+        <collection property="ordersList" ofType="orders">
+            <!--集合类型的泛型的成员变量-->
+            <id property="id" column="oid"></id>
+            <result property="orderNumber" column="orderNumber"></result>
+            <result property="orderPrice" column="orderPrice"></result>
+        </collection>
+    </resultMap>
+
+
+<!--————————————————————————————————分开写的方法————————————————————————————————————————————————————————————————————————————————————————-->
+
+
+    <select id="getById2" parameterType="int"  resultMap="customermap2">
+        select id,name,age
+        from customer
+        where id=#{id}
+    </select>
+    <select id="getByIdList" parameterType="int" resultType="orders">
+        select id,orderNumber,orderPrice
+        from orders
+        where customer_id=#{id}
+    </select>
+    <resultMap id="customermap2" type="customer">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="age" column="age"></result>
+        <!--引用查多方的list集合   column把id值传入下一个sql语句   select：引用歇一天语句-->
+        <collection property="ordersList" ofType="orders" column="id" select="getByIdList" />
+    </resultMap>
+
+
+
+        <!--缺点：getByIdList的查询语句是orders表，应该在OrdersMapper.xml文件中-->
+<!--————————————————————————————————分开写的方法：优化————————————————————————————————————————————————————————————————————————————————————————-->
+        <!--优化：在集合/对象的标签 select：使用命名空间+标识的方式来定位其他mapper文件中的查询语句-->
+
+    <select id="getById3" parameterType="int"  resultMap="customermap3">
+        select id,name,age
+        from customer
+        where id=#{id}
+    </select>
+    <resultMap id="customermap3" type="customer">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="age" column="age"></result>
+        <!--引用查多方的list集合   column把id值传入下一个sql语句   select：引用歇一天语句-->
+        <collection property="ordersList" ofType="orders" column="id" select="org.example.mapper.OrdersMapper.getByIdList" />
+    </resultMap>
+
+
+
+
+</mapper>
