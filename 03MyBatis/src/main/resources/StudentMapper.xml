@@ -6,29 +6,38 @@
     <!--实现sql语句
         id:sql语句的标识
         resultType:返回结果集的类型（若返回的是集合，则必须用泛型的类型）的全限定名     （可以使用手动设置的别名来代表全限定名）
-        parameterType：参数类型(参数类型有默认别名)                                 （可以使用手动设置的别名来代表全限定名）
+        parameterType：参数类型(参数类型有默认别名)                                 （可以使用手动设置的别名来代表全限定名）          //参数超过一个该属性不写，使用注解@Param()配合
+                                                                                                                             //参数是1个集合或数组该属性也不用写
+                                                                                                                             //多个参数不写，在sql中可以使用下标来表示 #{arg下标}  //比注解方便，但是语义不明确
+                        //总结：若是参数过多，建议使用一个map装起来（只有参数是简单类型、实体类类型时，该属性才写，若是多个参数、集合类型、数组类型等都可以不用写）
+
     <select id="" parameterType="" resultType=""></select>
+            #{}:是非字符串拼接的参数的占位符,简单类型(基本类型、String)可随便写，实体类类型要写成员变量且区分大小写，可以防止sql注入    底层是PreparedStatement
+            ${}:主要针对字符串拼接/字符串替换(配合注解),一般用于模糊查询，简单类型(基本类型、String)可随便写，实体类类型要写成员变量且区分大小写，有sql注入风险，
+
+            优化模糊查询：like concat('%',#{xxx},'%')
+
     -->
     <select id="getAll"  resultType="student">    <!--resultType使用了别名-->
         select id,name,email,age
         from student
     </select>
 
-    <select id="getById" parameterType="int" resultType="org.example.domain.Student">
+    <select id="getById" parameterType="int" resultType="org.example.domain.Book">
         select id,name,email,age
         from student
         where id=#{id}
         <!--#{}占位-->
     </select>
 
-    <select id="getByName" parameterType="string" resultType="org.example.domain.Student">
+    <select id="getByName" parameterType="string" resultType="org.example.domain.Book">
         select id,name,email,age
         from student
         where name like '%${name}%'
         <!--%{}字符串拼接-->
     </select>
 
-    <insert id="insert" parameterType="org.example.domain.Student">
+    <insert id="insert" parameterType="org.example.domain.Book">
         insert into  student (name,email,age) values(#{name},#{email},#{age})
     </insert>
 

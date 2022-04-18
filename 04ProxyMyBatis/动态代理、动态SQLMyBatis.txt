@@ -1,4 +1,4 @@
-在模块中使用数据库：使用demo库的users表
+在模块中使用数据库：使用demo库的users表、book表、orders表、customer表
 
 
 包:界面层Controller
@@ -16,3 +16,15 @@
 
 
 
+UUID：全球唯一字符串，36个字母数字中划线组成
+
+
+动态SQL：sql
+            include
+            where、if
+            set、if
+            foreach
+    注意：要使用批量更新，必须在jdbc.properties属性文件中的url中添加&allowMultiQueries=true，允许多条语句执行多行操作。
+
+
+关于1对多，多对1：如果深层的集合/对象中还有集合/对象----->collection标签可以嵌套association标签、association标签可以嵌套collection标签

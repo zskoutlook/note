@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.mapper.OrdersMapper">
+    <!--返回Id的Orders对象  多对一，查多中的id对应信息           多方持有一方的实体类对象-->
+    <select id="getById" parameterType="int" resultMap="ordersmap">
+        select o.id oid,orderNumber,orderPrice,customer_id,c.id cid,name,age
+        from orders o inner join customer c on customer_id=c.id
+        where o.id=#{id}
+
+    </select>
+    <!--返回对象的成员变量是一个实体类类型的数据是，可以使用association标签继续往下绑定-->
+    <resultMap id="ordersmap" type="orders">
+        <id property="id" column="oid"></id>
+        <result property="orderNumber" column="orderNumber"></result>
+        <result property="orderPrice" column="orderPrice"></result>
+        <!--成员变量是一个实体类类型的数据，可以用该方式继续绑定  property：该实体类类型的成员变量    javaType该成员变量的类型-->
+        <association property="customer" javaType="customer">
+            <id property="id" column="cid"></id>
+            <result property="name" column="name"></result>
+            <result property="age" column="age"></result>
+        </association>
+    </resultMap>
+
+
+<!--————————————————————————————————————多对多分开sql的优化————————————————————————————————————————-->
+    <select id="getByIdList" parameterType="int" resultType="orders">
+        select id,orderNumber,orderPrice
+        from orders
+        where customer_id=#{id}
+    </select>
+</mapper>

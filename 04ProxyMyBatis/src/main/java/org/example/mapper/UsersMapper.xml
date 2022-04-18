@@ -16,7 +16,6 @@
         from users
         where id=#{id}
     </select>
-
     <!--List<Users> getByName(String userName);-->
     <select id="getByName" parameterType="string" resultType="users">
         select id,userName,birthday,sex,address
@@ -24,8 +23,11 @@
         where username like '%${username}%'
     </select>
 
-    <!--void insert(Users users);-->
+    <!--void insert(Users users);    返回自增的主键值到对象的id属性中：keyProperty表示哪个属性来接主键值、resultType返回主键类型、order在插入语句执行前还是执行后-->
     <insert id="insert" parameterType="users">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            select last_insert_id();
+        </selectKey>
         insert into users (username,birthday,sex,address) values(#{userName},#{birthday},#{sex},#{address})
     </insert>
 
@@ -39,4 +41,98 @@
     <delete id="delete" parameterType="int">
         delete from users where id=#{id}
     </delete>
+
+    <!--模糊用户名或地址查询 List<Users> getByNameOrAddress(String columnName,String columnValue);-->
+    <select id="getByNameOrAddress"  resultType="users">
+        select id,username,birthday,sex,address
+        from users
+        where ${columnName} like concat('%',#{columnValue},'%')
+    </select>
+
+<!--——————————————————————————————————————————动态sql——————————————————————————————————————————————————————————————————————————————————————————————-->
+    <!--sql片段    -->
+    <sql id="dynamicSQL">
+         id,userName,birthday,sex,address
+    </sql>
+    <!--在语句中使用include标签去引用sql片段,可以在sql语句的任何位置插入-->
+    <select id="getAllDynamicSQL"  resultType="users">
+        select <include refid="dynamicSQL"></include>
+        from users
+    </select>
+
+    <!--where多条件拼接      if可以根据参数值（参数对象的成员变量）来判断是否进入条件-->
+    <select id="getDynamicSQL" parameterType="users" resultType="users">
+        select id,username,birthday,sex,address
+        from users
+        <where>
+            <if test="userName!=null and userName!=''">
+                and username like concat('%',#{userName},'%')
+            </if>
+            <if test="birthday">
+                and birthday=#{birthday}
+            </if>
+            <if test="sex!=null and sex!=''">
+                and sex=#{sex}
+            </if>
+            <if test="address!=null and address!=''">
+                and address like concat('%',#{address},'%')
+            </if>
+        </where>
+    </select>
+    <!--set有选择地进行更新处理，但至少更新1列             有值更新列，没值就不更新列(不动)-->
+    <update id="updateDynamicSQL" parameterType="users">
+        update users
+        <set>
+            <if test="userName!=null and userName!=''">
+                username=#{userName},
+            </if>
+            <if test="birthday!=null">
+                birthday=#{birthday},
+            </if>
+            <if test="sex!=null and sex!=''">
+                sex=#{sex},
+            </if>
+            <if test="address!=null and address!=''">
+                address=#{address},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <!--foreach循环遍历，完成循环条件查询、批量删除、批量增加、批量更新      collection指定参数类型->取值:array表示数组、map集合、list集合   item:参数当前循环的数据的名（随便起名）  separator:分隔符 open:开头 close：结尾-->
+    <select id="getByIds"  resultType="users">
+        select id,userName,birthday,sex,address
+        from users
+        where id in
+                <foreach collection="array" item="id" separator="," open="(" close=")">
+                    #{id}
+                </foreach>
+    </select>
+
+<!--—————————————————————————————————————————参数\返回值—————————————————————————————————————————————————————————————————————————————————————-->
+    <!--多个参数，parameterType属性不写，使用#{arg下标}表示-->
+    <select id="getByBirthday" resultType="users">
+        select id,userName,birthday,sex,address
+        from users
+        where birthday between #{arg0} and #{arg1}
+    </select>
+    <!--参数是一个map集合          parameterType也可以不写          #{map的的key}-->
+    <select id="getByBirthdayByMap" parameterType="map" resultType="users">
+        select id,userName,birthday,sex,address
+        from users
+        where birthday between #{begin} and #{end}
+    </select>
+    <!--返回值是一行的map           map集合中的key就是列名/别名-->
+    <select id="getReturnMap" parameterType="int" resultType="map">
+        select userName as name ,address
+        from users
+        where id=#{id}
+    </select>
+    <!--返回值是多行的map——>即List<map>           map集合中的key就是列名/别名-->
+    <select id="getReturnMaps"  resultType="map">
+        select userName as name ,address
+        from users
+    </select>
+
+
+
 </mapper>
