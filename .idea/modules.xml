@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/.idea.iml" filepath="$PROJECT_DIR$/.idea/.idea.iml" />
+      <module fileurl="file://$PROJECT_DIR$/01JDBC/01JDBC.iml" filepath="$PROJECT_DIR$/01JDBC/01JDBC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/07SpringMyBatis.iml" filepath="$PROJECT_DIR$/07SpringMyBatis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/06AOP/AOP.iml" filepath="$PROJECT_DIR$/06AOP/AOP.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/note.iml" filepath="$PROJECT_DIR$/.idea/note.iml" />
+      <module fileurl="file://$PROJECT_DIR$/out/out.iml" filepath="$PROJECT_DIR$/out/out.iml" />
+      <module fileurl="file://$PROJECT_DIR$/05springIOC/spring.iml" filepath="$PROJECT_DIR$/05springIOC/spring.iml" />
     </modules>
   </component>
 </project>

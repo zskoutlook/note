@@ -24,3 +24,7 @@ SqlSession接口：DefaultSqlSession是其实现类
  //4.执行sql操作
  //5.增删改 操作完要提交事务
  //6.关闭sqlSession对象
+
+
+
+

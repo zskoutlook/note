@@ -1,0 +1,62 @@
+setter包：基于XML的setter注入
+constructor包：基于XML的构造器注入
+value包：基于注解的方式注入
+
+threeTierArchitectureDemo包:三层架构的例子，基于XML
+threeTierArchitectureDemoTwo:三层架构例子，基于注解
+
+applicationContext.xml：spring配置文件
+threeTierArchitectureDemo包：       三层架构spring配置文件
+threeTierArchitectureDemoTwo包：    三层架构注解spring配置文件
+
+
+
+
+
+
+ IOC:控制反转,是思想---由spring容器进行对象的创建和依赖注入,程序员使用时直接取出使用               DI：实现IOC思想的技术
+ 正转：程序员进行对象的创建和依赖注入
+ 反转：由spring容器创建对象和依赖注入，将控制权从程序员手中夺走交给spring容器
+       A a = new A()        ===反转===>    <bean id="a" class="xxx.xxx.A" >               创建对象
+       a.setAge(1)                            <property name="age" value="1">             依赖注入
+                                           </bean>
+ spring特定：
+            轻量级：由20多个模块构成，每个jar包都很小
+            面向接口编程：不关心实现类的类型，使用时接口指向实现类，切换实现类即可切换整个功能
+            AOP面向切面编程：将公共的、通用的、重复的代码单独开发，在需要的时候反织回去，底层的原理时动态代理
+            整合其他框架：使其他框架更易用
+
+
+
+基于XML的IOC：
+    1.创建对象<bean>                  //需要无参构造器
+    2.对象赋值：<property>            // 简单类型注入---> value属性、引用类型注入---> ref属性
+        setter注入：必须有setXxx方法
+        构造方法注入：有对应构造器
+                    1.使用构造方法的参数名注入值             name
+                    2.使用构造方法参数的下标注入值           index
+                    3.使用默认构造方法的参数的顺序注入值      不写index/name，直接注入值
+
+
+基于注解的IOC：必须在核心配置文件添加 包扫描
+    1.创建对象的注解：需要无参构造
+                        @Component：可以创建任意对象
+                        @Controller：专门创建看之前对象（servlet），这种对象可以接受用户的请求，返回处理结果给客户端
+                        @Service：专门创建业务逻辑层的对象，负责向下访问数据访问层，处理完毕后的结果返回给界面层
+                        @Repository：专门创建业务逻辑层对象，负责数据库的增删改查所有操作
+    2.依赖注入的注解
+                        简单型注入：@Value
+                        引用类型注入：
+                                     @Autowired     使用类型注入，从整个Bean工厂中搜索同源类型对象进注入                  //同源：被注入类型与注入类型是完全相同的类型、被注入类型(父)与注入类型(子)是父子继承/接口实现类型
+                                                    注入对象时若有父子类对象都存在的情况下：@Autowired使用类型注入---意味着有个多可注入的对象，此时按名称进行二次筛选，1.相同名称的对象注入属性中
+                                                                                                                                                          2.若没有名称时相同时，优先注入注入父对象
+                                     @Autowired  +  @Qualifier  使用名称注入值，从整个Bean工厂中搜索同源且相同名称的对象注入
+
+
+                                     （同源情况下：若父子类对象都会被容器内创建，则创建子类对象时是会默认调用父类无参构造-->去清空子类中父类传下来的空间中的值）
+
+
+
+
+
+applicationContext.xml配置文件拆分策略：按层拆、按功能拆

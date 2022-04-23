@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.example.mapper.CustomerMapper">
-    <!--返回Id的Customer对象  1对多，查1的信息           一方持有多方的集合List-->
+    <!--返回Id的Customer对象  1对多，查1的信息           一方持有多方的集合-->
     <select id="getById" parameterType="int" resultMap="customermap">
         select c.id cid,name,age,o.id oid,orderNumber,orderPrice,customer_id
         from customer c left join orders o on c.id=customer_id

@@ -4,13 +4,23 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/01JDBC/pom.xml" />
+        <option value="$PROJECT_DIR$/05spring/pom.xml" />
         <option value="$PROJECT_DIR$/03MyBatis/pom.xml" />
         <option value="$PROJECT_DIR$/04ProxyMyBatis/pom.xml" />
+        <option value="$PROJECT_DIR$/05springIOC/pom.xml" />
+        <option value="$PROJECT_DIR$/06AOP/pom.xml" />
+        <option value="$PROJECT_DIR$/06spingAOP/pom.xml" />
+        <option value="$PROJECT_DIR$/07SpringMyBatis/pom.xml" />
+        <option value="$PROJECT_DIR$/01JDBC/pom.xml" />
       </list>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="SwUserDefinedSpecifications">
+    <option name="specTypeByUrl">
+      <map />
+    </option>
   </component>
 </project>

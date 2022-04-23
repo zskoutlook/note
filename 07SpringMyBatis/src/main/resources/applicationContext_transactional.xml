@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--此配置文件与applicationContext_service.xml功能一样，只是事务配置不同-->
+
+
+
+    <import resource="applicationContext_mapper.xml"></import>      <!--导入其他mapper的配置文件-->
+
+    <!--添加包扫描-->
+    <context:component-scan base-package="org.example.service.impl"></context:component-scan>
+
+    <!--事务处理-->
+    <!--1.添加事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--因为事务必须关联数据库处理，所以要配置数据源-->
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+
+
+    <!--2.配置事务切面   tx后缀-->
+    <tx:advice id="myadvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!--在这些标签里指定propagation、no-rollback-for、rollback-for、timeout、read-only、isolation-->
+            <tx:method name="*select*" read-only="true"/>
+            <tx:method name="*find*" read-only="true"/>
+            <tx:method name="*search*" read-only="true"/>
+            <tx:method name="*get*" read-only="true"/>
+            <tx:method name="*insert*" propagation="REQUIRED"/>
+            <tx:method name="*add*" propagation="REQUIRED" no-rollback-for="ArithmeticException"/>
+            <tx:method name="*save*" propagation="REQUIRED" no-rollback-for="ArithmeticException"/>
+            <tx:method name="*set*" propagation="REQUIRED" />
+            <tx:method name="*change*" propagation="REQUIRED" />
+            <tx:method name="*modify*" propagation="REQUIRED"/>
+            <tx:method name="*delete*" propagation="REQUIRED"/>
+            <tx:method name="*remove*" propagation="REQUIRED"/>
+            <tx:method name="*drop*" propagation="REQUIRED"/>
+            <tx:method name="*clear*" propagation="REQUIRED"/>
+            <tx:method name="*" propagation="SUPPORTS"/>
+        </tx:attributes>
+    </tx:advice>
+    <!--绑定切面和切入点-->
+    <aop:config>
+        <aop:pointcut id="mycut" expression="execution(* org.example.service.impl.*.*(..))"/>
+        <!--order:优先级数字        advice-ref:配置切面的引用          pointcut-ref:切面表达式的引用-->
+        <aop:advisor  advice-ref="myadvice" pointcut-ref="mycut"></aop:advisor>
+    </aop:config>
+
+
+</beans>

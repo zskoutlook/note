@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--1.控制反转：XML-->                                   <!--autowire:引用类型自动注入：按类型byType\按名称byName，这样就不必对应的写property标签了-->
+    <bean id="studentSetter" class="org.example.setter.Student" autowire="byType">         <!--创建对象：id就是创建的对象名、class就是底层反射构建对象的类型,需要默认的无参构造-->
+        <!--set注入：简单类型      value:简单类型-->
+        <property name="name" value="宗绍凯"></property>       <!--setting注入，需要setXxx方法-->
+        <property name="age" value="25"></property>
+        <!--set注入：引用类型      ref:直接引用容器管理的对象即可，即id对象名-->
+        <property name="school" ref="schoolSetter"></property>
+    </bean>
+
+    <bean id="schoolSetter" class="org.example.setter.School">
+        <property name="name" value="北大"></property>
+        <property name="address" value="北京"></property>
+    </bean>
+    <bean id="roomSetter" class="org.example.setter.Room">
+        <property name="id" value="2018"></property>
+    </bean>
+            <!--——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————-->
+    <bean id="studentConstructor" class="org.example.constructor.Student" autowire="byName">
+        <!--index属性：使用构造方法的参数下标赋值-->
+        <constructor-arg index="0" value="21"></constructor-arg>               <!--构造器注入-->
+        <!--name属性：使用构造方法的参数名称赋值-->
+        <constructor-arg name="age" value="19"></constructor-arg>
+        <!--使用默认构造方法的参数的顺序注入值：没有任何属性直接注入值（该标签的顺序要与参数顺序相同，本例中排第3该标签对应构造器参数3）-->
+        <constructor-arg ref="schoolConstructor"></constructor-arg>
+    </bean>
+
+    <bean id="schoolConstructor" class="org.example.constructor.School">
+        <constructor-arg name="name" value="清华大学"></constructor-arg>
+        <constructor-arg name="address" value="中国北京"></constructor-arg>
+    </bean>
+    <bean id="roomConstructor" class="org.example.constructor.Room">
+        <constructor-arg name="id" value="2019"></constructor-arg>
+    </bean>
+
+
+
+    <!--1.控制反转：注解——————添加包扫描：扫描指定的包，有注解就创建对象，属性注入
+             多个包扫描base-package属性值用逗号分隔：base-package="org.example.one,org.example.two"
+             多个包时可以单个包扫描一个父包，若父包下其他有不需要扫描的子包，则也会扫描，会降低容器启动速度，所以不推荐扫描父包
+    -->
+    <context:component-scan base-package="org.example.vlaue"></context:component-scan>      <!--单个包扫描-->
+
+
+
+
+
+
+    <!--2.配置文件拆分整合-->
+
+    <!--threeTierArchitectureDemo三层架构例子拆分合并-->
+    <import resource="classpath:threeTierArchitectureDemo/applicationContext_controller.xml"></import>      <!--方式一：单个导入-->
+    <import resource="classpath:threeTierArchitectureDemo/applicationContext_mapper.xml"></import>
+    <import resource="classpath:threeTierArchitectureDemo/applicationContext_service.xml"></import>
+    <!--threeTierArchitectureDemoTwo三层架构注解例子拆分合并-->
+    <import resource="classpath:threeTierArchitectureDemoTwo/applicationContext_*.xml"></import>            <!--方式二：批量导入-->
+
+
+
+
+
+</beans>

@@ -6,13 +6,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="01JDBC" />
-        <module name="03MyBatis" />
-        <module name="04ProxyMyBatis" />
+        <module name="MyBatis" />
+        <module name="JDBC" />
+        <module name="springIOC" />
+        <module name="ProxyMyBatis" />
+        <module name="SpringMyBatis" />
+        <module name="springAOP" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="untitled" target="17" />
+      <module name="01JDBC" target="1.8" />
+      <module name="07SpringMyBatis" target="1.7" />
+      <module name="AOP" target="1.8" />
+      <module name="spring" target="1.8" />
+      <module name="untitled" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

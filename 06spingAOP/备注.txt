@@ -1,0 +1,73 @@
+spring原生的AOP支持了解即可，重点是AspectJ接口框架（面向切面编程的框架）
+Spring支持AOP编程，即在目标方法执行前时调用          @Before通知涉及接口org.springframework.aop.MethodBeforeAdvice
+                                后时调用          @After通知涉及接口org.springframework.aop.AfterReturningAdvice
+                                抛异常时调用       @Throws通知涉及接口org.springframework.aop.ThrowsAdvice
+                                被拦截时调用       @Around通知涉及接口org.aopalliance.intercept.MethodInterceptor
+                                                    （通知：即切面功能）
+
+
+AOP：面向切面编程---强切面提取出来，单独开发，在需要调用的方法中通过动态代理的方式进行织入
+切面：公共的、通用的、重复的功能
+连接点：就是目标方法。因为在目标方法中要实现目标方法的功能和切面功能的整合
+切入点：多个连接点构成切入点，切入点可以是1个目标方法、1个类中的所有目标方法、某个包下的所有类中的目标方法
+目标对象：操作谁，谁就是目标对象
+通知Advice：来指定切入的时机
+
+
+
+
+AspectJ接口框架是Java语言开发的，所以无缝扩展:
+
+    切入点表达式：在哪些业务方法添加切面功能
+                    execution(访问权限 方法返回值 方法声明(参数) 异常类型)
+                              可省略                           可省略
+                    *：任意字符      ..：在参数中代表任意参数、路径中代表本路径及其子路径
+
+    1.创建业务接口
+    2.创建业务实现
+    3.创建切面类：@Aspect
+                通知：
+                            @Before             前置通知：public、void、可选参数JoinPoint类型
+                                                value：切入点表达式
+                                                （目标方法返回值就是动态对象的返回值）
+
+                            @AfterReturning     后置通知：public、void、可选参数一般为Object类型，是目标方法的返回值(所以可以改变目标方法的返回值:若是简单类型则不能改变，其他则可以改变，因为对象是内部改变不会修改地址)
+                                                value：切入点表达式
+                                                returning：指定目标方法返回值名称，需要与切面方法参数一致
+                                                （目标方法返回值就是动态对象的返回值）
+
+                            @Around             环绕通知：public、返回值、参数ProceedingJoinPoint类型(可以获得目标)
+                                                        通过拦截目标方法的方式，在目标方法前后都增强功能的通知，一般事务会使用该通知
+                                                value：切入点表达式
+                                                （环绕通知方法返回值就是动态对象的返回值）
+
+                            @After              最终通知：public、void、可选参数JoinPoint类型
+                                                        无论方法是否正常执行，最终通知都会被执行，类似于try-catch-finaly
+                                                value：切入点表达式
+
+
+                            @Pointcut           定义切入点别名:创建一个空方法，方法名就是切入点表达式的别名  其他通知中使用：value = "别名()"
+                                                value：切入点表达式
+
+
+
+
+
+                                            JoinPoint接口的方法：
+                                                                getSignature()      目标方法签名
+                                                                getArgs()           代理对象调用方法传入的参数数组
+
+                                            ProceedingJoinPoint接口类型的方法：
+                                                                getArgs()           代理对象调用方法传入的参数数组
+                                                                proceed()           目标方法
+    4.在applicationContext.xml文件进行切面绑定
+
+
+
+环绕通知上部分（1.1.参数就是目标方法本身、2.调用目标方法可以执行并可以获取目标方法返回值）
+    前置通知
+    目标方法
+    后置通知
+    最终通知
+环绕通知下部分（3.环绕通知返回值就返回目标方法的返回值、4.环绕通知返回值就是最终动态对象的返回值）
+

@@ -66,7 +66,7 @@ public class MyTestUsers {
     }
     @Test
     public void testInsert(){
-        Users users = new Users("宗绍凯", new Date(), "1", "青岛");
+        Users users = new Users("宗绍凯6", new Date(), "1", "青岛");
         System.out.println(users);
         //5.调用接口的方法       添加数据      并把主键值给参数id属性
         int insert = usersMapper.insert(users);

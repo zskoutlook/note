@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--创建业务对象      推荐使用注解方式IOC-->
+    <bean id="someService" class="org.AspectJ.SomeServiceImpl" ></bean>
+    <!--创建切面对象      推荐使用注解方式IOC-->
+    <bean id="myaspect" class="org.AspectJ.MyAspect"></bean>
+    <!--绑定     默认是动态代理，取时需要接口类型             添加proxy-target-class="true":从JDK动态代理切换到CGLIB动态代理(子类继承父类式)，可以使用父类(实现类)类型接受-->
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+</beans>

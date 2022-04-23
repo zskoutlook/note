@@ -1,0 +1,94 @@
+事务注解
+@Transactional(propagation = Propagation.REQUIRED,                                  propagation:事务传播特性-->即在调用A方法时，A方法内调用B方法，AB方法是否有事务时面对的事务处理
+               noRollbackForClassName = {"ArithmeticException"},                    noRollbackForClassName:发生什么异常名为xxx时不回滚       （字符串数组、单个可以用字符串）
+               noRollbackFor = {ArithmeticException.class},                         noRollbackFor：发生什么类型异常时不撤销操作               （类数组、单个可以用类）
+               rollbackForClassName = {"NullPointerException"},                     rollbackForClassName：发生什么异常名为xxx时必须回滚       （字符串数组、单个可以用字符串）
+               rollbackFor = {NullPointerException.class},                          rollbackFor：发生什么类型异常时必须回滚                   （类数组、单个可以用类）
+               timeout = -1,                                                        timeout:连接超时默认值-1，永不超时
+               readOnly = false),                                                   readOnly:是否只读，默认false，若是查询操作必须为true
+               isolation = Isolation.DEFAULT                                        isolation:是数据库的隔离级别       （使用数据库自己的隔离级别Isolation.DEFAULT）
+                                                                                      1).未提交读(Read Uncommitted)：允许脏读，也就是可能读取到其他会话中未提交事务修改的数据
+                                                                                      2).提交读(Read Committed)：只能读取到已经提交的数据。Oracle等多数数据库默认都是该级别 (不重复读)
+                                                                                      3).可重复读(Repeated Read)：可重复读。在同一个事务内的查询都是事务开始时刻一致的，InnoDB默认级别。在SQL标准中，该隔离级别消除了不可重复读，但是还存在幻象读，但是innoDB解决了幻读
+                                                                                      4).串行读(Serializable)：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞
+                                                                                      5).使用数据库默认的隔离级别isolation = Isolation.DEFAULT
+                                                                                            MySQL：mysql默认的事务处理级别是'REPEATABLE-READ',也就是可重复读
+                                                                                            Oracle：oracle数据库支持READ COMMITTED 和SERIALIZABLE这两种事务隔离级别。默认系统事务隔离级别是READ COMMITTED,也就是读已提交
+
+
+
+
+spring2种事务处理方式 ：
+                        1.注解式：@Transactional填在类上--->类中的所有方法都符合事务设定，不靠谱
+                                               填在方法上->对具体的方法符合事务设定
+
+
+                        2.声明式（必须掌握）：在配置文件添加一次，整个项目都符合事务的设定
+                                          要求项目中的方法命名有规范，因为可以通配符的方式来选中:       增加操作：add、save、insert、set
+                                                                                                 更新操作：update、change、modify
+                                                                                                 删除操作：delete、drop、remove、clear
+                                                                                                 查询操作：select、find、search、get
+                                          <!--2.配置事务切面   tx后缀-->
+                                              <tx:advice id="myadvice" transaction-manager="transactionManager">
+                                                  <tx:attributes>
+                                                      <!--在这些标签里指定propagation、no-rollback-for、rollback-for、timeout、read-only、isolation-->
+                                                      <tx:method name="*select*" read-only="true"/>
+                                                      <tx:method name="*insert*" propagation="REQUIRED"/>
+                                                      <tx:method name="*add*" propagation="REQUIRED" no-rollback-for="ArithmeticException"/>
+                                                      <tx:method name="*save*" propagation="REQUIRED" rollback-for="ArithmeticException"/>
+                                                      <tx:method name="*set*" propagation="REQUIRED" />
+
+                                                      <tx:method name="*" propagation="SUPPORTS"/>
+                                                  </tx:attributes>
+                                              </tx:advice>
+                                              <!--绑定切面和切入点-->
+                                              <aop:config>
+                                                  <aop:pointcut id="mycut" expression="execution(* org.example.service.impl.*.*(..))"/>
+                                                  <!--order:优先级数字        advice-ref:配置切面的引用          pointcut-ref:切面表达式的引用-->
+                                                  <aop:advisor  advice-ref="myadvice" pointcut-ref="mycut"></aop:advisor>
+                                              </aop:config>
+
+                        声明式事务范围太大，可以配置优先级，与注解式事务配合优先级谁被执行（了解即可）
+
+
+------------------------------------------------------------------------------------------------------------
+为什么要添加事务管理器：
+    JDBC：Connection         con.commit()              con.rollback()
+    MyBatis：SqlSession      sqlSession.commit()       sqlSession.rollback()
+    事务管理器是用来生成相应技术的连接+执行语句的对象
+    如果使用MyBatis，必须使用DataSourceTransactionManager事务类管理器
+
+<!--事务处理-->
+<!--1.添加事务管理器-->
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <!--因为事务必须关联数据库处理，所以要配置数据源-->
+    <property name="dataSource" ref="dataSource"></property>
+</bean>
+<!--2.添加注解驱动  tx后缀的-->
+<tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
+------------------------------------------------------------------------------------------------------------
+
+Spring事务的传播特性:多个事务之间的合并,互斥等都可以通过设置事务的传播特性来解决.
+    常用:
+      PROPAGATION_REQUIRED：必被包含事务(增删改必用)
+      PROPAGATION_REQUIRES_NEW：自己新开事务，不管之前是否有事务
+      PROPAGATION_SUPPORTS：支持事务，如果加入的方法有事务，则支持事务，如果没有，不单开事务
+      PROPAGATION_NEVER：不能运行在事务中，如果包在事务中，抛异常
+      PROPAGATION_NOT_SUPPORTED：不支持事务，运行在非事务的环境
+    不常用:
+      PROPAGATION_MANDATORY：必须包在事务中，没有事务则抛异常
+      PROPAGATION_NESTED：嵌套事务
+
+即在调用A方法时，A方法内调用B方法，AB方法是否有事务时面对的事务处理:执行B方法的dao层(mapper)操作后抛出异常时，回滚情况
+    1.      A:无事务           B:无事务           A表:成功       B表:成功
+    2.      A:无事务           B:REQUIRED        A表:成功       B表:失败回滚
+    3.      A:REQUIRED        B:无事务           A表:失败回滚    B表:失败回滚
+    4.      A:REQUIRED        B:NOT_SUPPORTED   A表:失败回滚    B表:成功
+    5.      A:REQUIRED        B:SUPPORTS        A表:失败回滚    B表:失败回滚
+    6.      A:REQUIRED        B:REQUIRES_NEW    A表:失败回滚    B表:失败回滚
+    7.      A:REQUIRED        B:REQUIRED        A表:失败回滚    B表:失败回滚
+    8.      A:REQUIRED        B:NEVER           A表:失败回滚    B表:对应的方法都没有执行，直接异常，表里自然没数据
+
+
+ ------------------------------------------------------------------------------------------------------------
+项目的所有事务必须添加到业务逻辑层上

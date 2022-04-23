@@ -24,7 +24,7 @@ public class MyTest {
         //2.创建SqlSessionFactory工厂对象
         SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(in);
         //3.取出sqlSession对象
-        sqlSession = factory.openSession();
+        sqlSession = factory.openSession();     //openSession()：传参数false默认是手工提交事务、true是自动提交
     }
     @After//该注解会在所有@Test方法执行后再执行一次
     public void  closeSqlSession(){
@@ -75,10 +75,12 @@ public class MyTest {
     @Test
     public void testUpdate()  {
         //4.完成更新操作       mapper的id.语句的id
-        int update = sqlSession.update("zsk.update", new Student(1, "张三三", "30000@qq.com", 3000));
+        int update = sqlSession.update("zsk.update", new Student(1, "张三6三", "30000@qq.com", 3000));
         //5.增删改 操作完要提交事务
         sqlSession.commit();
 
         System.out.println(update);
     }
+
+
 }

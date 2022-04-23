@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="uService" class="org.example.threeTierArchitectureDemo.service.impl.UsersServiceImpl"> <!--创建业务逻辑层对象-->
+        <property name="usersMapper" ref="uMapper"></property>
+    </bean>
+</beans>

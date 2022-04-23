@@ -23,21 +23,21 @@
         from student
     </select>
 
-    <select id="getById" parameterType="int" resultType="org.example.domain.Book">
+    <select id="getById" parameterType="int" resultType="org.example.domain.Student">
         select id,name,email,age
         from student
         where id=#{id}
         <!--#{}占位-->
     </select>
 
-    <select id="getByName" parameterType="string" resultType="org.example.domain.Book">
+    <select id="getByName" parameterType="string" resultType="org.example.domain.Student">
         select id,name,email,age
         from student
         where name like '%${name}%'
         <!--%{}字符串拼接-->
     </select>
 
-    <insert id="insert" parameterType="org.example.domain.Book">
+    <insert id="insert" parameterType="org.example.domain.Student">
         insert into  student (name,email,age) values(#{name},#{email},#{age})
     </insert>
 
