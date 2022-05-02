@@ -1,0 +1,112 @@
+web应用都是基于MVC开发模式的
+M模型：实体类、业务逻辑层、数据访问层(mybatis是优化数据访问层的)
+V视图：HTML、JavaScript、vue
+C控制器：接受客户端响应的请求，并返回响应到客户端的组件，Servlet就是组件    (springmvc是优化Servlet)
+（spring框架用来整合其他框架）
+
+springmvc特点：轻量级、具备IOC AOP、完全基于注解开发
+开发步骤：1.添加springmvc.xml配置文件，指定包扫描、添加视图解析器
+         2.删除web.xml(版本太低)，新建web.xml
+         3.在web.xml中注册springMVC框架（所有的web请求都是基于servlet的）
+         4.例：在webapp目录下新建admin/main.jsp           在index.jsp发送请求给服务器给main.jsp
+         5.开发控制器（Servlet），它是一个普通的类
+
+
+
+jsp---------------->DispatcherServlet--------------------->springmvc的处理器就是一个普通的方法---------------------------->service------------------------------>dao
+                                                                   由类中的方法完成
+                                                     规范：public、任意返回值、参数：可以有无，类型任意
+                                                     使用@RequestMapping注解声明一个访问的路径
+
+
+
+<mvc:annotation-driven/>会自动注册两个bean，分别为：
+                DefaultAnnotationHandlerMapping     地址映射器，解析DispatcherServlet接受的地址，解析出访问的资源名称，即示例中的"xxx.action"
+                AnnotationMethodHandlerAdapter      用到适配器，拿到访问的资源名称"xxx.action"后，创建对应的控制器对象（即@Controller），并dataBinder处理数据转换/格式化/验证
+该标签除了这2个bean，还支持：
+        1.支持使用 @NumberFormat 、@DateTimeFormat
+        2.注解完成数据类型的格式化
+        3.支持使用 @RequestBody 和 @ResponseBody 注解
+        4.静态资源的分流也使用这个标签
+
+
+
+
+
+
+@RequestMapping注解：   1.方法上--->为方法注册一个可以访问的路径
+                                请求参数接受方式：数据会自动根据类型转换
+                                            方式一：请求参数名与控制器方法形参名一致，就能在方法里获取参数,类型会自动根据形参类型转换 （post编码问题）
+                                            方式二：控制器方法形参是对象类型参数，实体类的成员变量名需要与请求参数名一致，这样参数会自动封装到对象中
+                                            方式三：动态占位符提交，仅限于超链接、地址栏提交数据。      1.地址URL：路径/值/值/值.do
+                                                                                                 2.注解value属性接受路径：路径/{自定义变量}/{自定义变量}/{自定义变量}.do
+                                                                                                 3.在形参前配合@PathVariable("自定义变量")注解接收参数转入方法中
+                                            方式四：请求参数名与控制器方法形参名不一致，在形参前配合使用注解@RequestParam("参数名")来解析给形参
+                                            方式五：手工提取数据-->控制器方法形参为HttpServletRequest，使用传统方式从request对象中获取参数
+
+
+
+                                            日期Date特殊:日期类型不能自动注入到方法的参数中
+                                                日期提交处理
+                                                    1）单个日期处理：要使用注解@DateTimeFormat,此注解必须搭配springmvc.xml文件中的<mvc:annotation-driven标签>
+                                                    2）类中全局日期处理： 注册一个注解,用来解析本类中所有的日期类型,自动转换.
+                                                日期显示处理：在页面显示好看的日期必须使用JSTL--->1.添加依赖 2.在页面上导入标签库 3.使用标签显示数据
+                                                            1.单个日期类型对象：直接转成String格式，传到响应页。
+                                                            2.list中的实体类对象的成员变量是日期格式，必须使用JSTL
+
+
+
+                                方法的参数类型（springmvc默认的参数类型）：在形参上去创建，就可以使用
+                                            1）HttpServletRequest
+                                            2）HttpServletResponse
+                                            3）HttpSession
+                                            4）Model
+                                            5）Map
+                                            6）ModelMap
+                                            注意:Map,Model,ModelMap和request一样,都使用请求作用域进行数据传递.所以服务器端的跳转必须是请求转发.
+
+
+
+
+
+                                方法返回值：ajax请求解析需要配合 @ResponseBody注解，且必须在springmvc。xml中添加注解驱动
+                                           String--->客户端资源的地址，自动拼接前缀和后缀。
+                                           Object--->返回json格式的对象，自动对对象或集合转为JSON，使用Jackson工具进行转换，必须要添加Jackson依赖
+                                           void----->无返回值，一般用于ajax请求
+                                           基本类型-->用于ajax请求
+                                           ModeAndView-->返回数据和视图
+
+
+                       2.类上----->类似于包名，可以把路径中相同的写这里  //提取相同的目录、当有多个类时，不同的类都有对应一个路径的方法，这时候就要区分
+
+                       value：路径
+                       method：接受提交的方式       RequestMethod.GET   ---对应提交方式--->
+
+———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+资源在WEB-INF目录下：此目录下的动态资源,不可直接访问,只能通过请求转发的方式进行访问
+
+拦截器：针对请求和响应进行的额外的处理，在请求和响应过程中添加预处理、后处理、最终处理
+拦截器时机：
+    1)preHandle():在请求被处理之前进行操作,预处理
+    2)postHandle():在请求被处理之后,但结果还没有渲染前进行操作,可以改变响应结果,后处理
+    3)afterCompletion():所有的请求响应结束后执行善后工作,清理对象,关闭资源 ,最终处理.
+拦截器实现：编写类，实现接口/继承父类，重写方法（时机），在springmvc.xml注册拦截器
+    方式一：继承HandlerInterceptorAdapter的父类
+    法式二：实现HandlerInterceptor接口（推荐）
+
+
+
+
+
+
+
+
+
+
+不懂：
+若是对象的属性是Date类型：在对应的属性上或者其set方法上加上@DateTimeFormat注解, 这个注解有一个pattern属性, 可以指定要日期的格式.
+Json日期：需要在类中的成员变量的getXXX方法上加注解.@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+<mvc:annotation-driven/>
+
+
+

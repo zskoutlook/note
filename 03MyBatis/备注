@@ -26,5 +26,3 @@ SqlSession接口：DefaultSqlSession是其实现类
  //6.关闭sqlSession对象
 
 
-
-

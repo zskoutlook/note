@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--添加包扫描-->
+    <context:component-scan base-package="org.example.controller"></context:component-scan>
+    <!--添加视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!--注意：前后缀虽然有，但是在请求转发/重定向时可以使用关键字去不适应前后缀    forward: redirect:  -->
+        <!--配置前缀-->
+        <property name="prefix" value="/admin/"></property>
+        <!--配置后缀-->
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+
+    <!--添加注解驱动    mvc结尾-->
+    <mvc:annotation-driven></mvc:annotation-driven>
+
+    <!--注册拦截器-->
+    <mvc:interceptors>
+        <!--可以有多个拦截器，会形成拦截器链-->
+        <mvc:interceptor>
+            <!--1.映射要拦截的请求        /** 全部拦截-->
+            <mvc:mapping path="/**"/>
+            <!--2.设置不拦截的-->
+            <mvc:exclude-mapping path="/showLogin"/>
+            <mvc:exclude-mapping path="/login"/>
+            <!--3.配置具体的拦截器实现功能的类-->
+            <bean class="org.example.interceptor.LoginInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+</beans>

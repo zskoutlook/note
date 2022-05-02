@@ -6,12 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="MyBatis" />
-        <module name="JDBC" />
+        <module name="08springMVC" />
         <module name="springIOC" />
-        <module name="ProxyMyBatis" />
         <module name="SpringMyBatis" />
         <module name="springAOP" />
+        <module name="MyBatis" />
+        <module name="JDBC" />
+        <module name="ProxyMyBatis" />
+        <module name="09SSM" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

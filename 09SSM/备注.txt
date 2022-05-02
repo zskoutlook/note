@@ -1,0 +1,21 @@
+SSM整合的步骤
+  0)建库,建表
+  1)新建Maven项目,选择webapp模板
+  2)修改目录
+  3)修改pom.xml文件(使用老师提供)
+  4)添加jdbc.properties属性文件
+  5)添加SqlMapConfig.xml文件(使用模板)
+  6)添加applicationContext_mapper.xml文件(数据访问层的核心配置文件)
+  7)添加applicationContext_service.xml文件(业务逻辑层的核心配置文件)
+  8)添加springmvc.xml文件
+  9)删除web.xml文件,新建,改名,设置中文编码,并注册springmvc框架,并注册Spring框架
+  10)新建实体类user
+  11)新建UserMapper.java接口
+  12)新建UserMapper.xml实现增删查所有功能,没有更新
+  13)新建service接口和实现类
+  14)新建测试类,完成所有功能的测试
+  15)新建控制器,完成所有功能
+  16)浏览器测试功能
+
+
+
